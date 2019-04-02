@@ -325,16 +325,16 @@ class Compressor(object):
         if settings.COMPRESS_OFFLINE_SOURCEMAPS_ON_FILES:
             new_map_filepath = '%s.map' % new_filepath
 
-            source_mapping_url_re = '(//[#|@] *sourceMappingURL=data:application/json;base64,' \
-                                    '(([A-Za-z0-9-]{4})*([A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?))|' \
-                                    '(/\*[#|@] *sourceMappingURL=data:application/json;base64,' \
-                                    '(([A-Za-z0-9-]{4})*([A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?)) *\*/'
+            source_mapping_url_re = r'(//[#|@] *sourceMappingURL=data:application/json;base64,' \
+                                    r'(([A-Za-z0-9-]{4})*([A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?))|' \
+                                    r'(/\*[#|@] *sourceMappingURL=data:application/json;base64,' \
+                                    r'(([A-Za-z0-9-]{4})*([A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?)) *\*/'
             m = re.search(source_mapping_url_re, content)
             if m:
-                b = m.group(2) if m.group(2) else m.group(6)
+                b = m.group(1) if m.group(1) else m.group(6)
                 map = base64.standard_b64decode(b)
                 if not self.storage.exists(new_map_filepath) or forced:
-                    self.storage.save(new_map_filepath, ContentFile(map.encode(self.charset)))
+                    self.storage.save(new_map_filepath, ContentFile(map))
                 content = re.sub(
                     source_mapping_url_re,
                     '//# sourceMappingURL=%s' % os.path.basename(new_map_filepath),

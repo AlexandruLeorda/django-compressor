@@ -47,7 +47,7 @@ class ClosureCompilerFilter(CompilerFilter):
                 sources[sources.index('stdin')] = kwargs['elem']['attrs_dict']['src']
                 map_dict['file'] = os.path.basename(kwargs['elem']['attrs_dict']['src'])
                 map_dict['sources'] = sources
-                map = json.dumps(map_dict)
+                map = bytes(json.dumps(map_dict), 'utf-8')
 
                 filtered = '%s\n//# sourceMappingURL=data:application/json;base64,%s' % (
                     filtered,

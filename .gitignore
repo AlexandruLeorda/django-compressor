@@ -15,3 +15,5 @@ docs/_build/
 .coverage
 .tox
 .eggs
+.idea
+.virtualenv
